@@ -186,6 +186,44 @@
             padding: 5px 0;
             color: #555;
         }
+
+        /* 微博分析内容样式 */
+        .weibo-analysis {
+            background: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .weibo-analysis h5 {
+            color: #2c3e50;
+            margin: 15px 0 10px 0;
+            font-size: 15px;
+        }
+
+        .weibo-analysis p {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .weibo-analysis ul {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+        .weibo-analysis li {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .example-quote {
+            background: #f0f7ff;
+            padding: 10px;
+            border-left: 3px solid #3498db;
+            margin: 8px 0;
+            font-style: italic;
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             .container {
@@ -333,14 +371,15 @@
             <!-- 2026-04-13 内容 -->
             <div class="date-content active" data-date="2026-04-13">
                 <div class="competitor-module">
-                    <h3 class="competitor-title">渠道：微博</h3>
+                    <h3 class="competitor-title">用户需求分析</h3>
                     <div class="competitor-content">
                         <p><strong>#异环# 微博舆情分析</strong></p>
                         <p>数据总量: 93条 | 分析时间: 2026-04-13</p>
-                        <div class="data-section">
+                        
+                        <div class="weibo-analysis">
                             <h4>用户关注点分布</h4>
                             <ul class="data-list">
-                                <li><strong>游戏攻略/资讯:</strong> 38条 (40.9%) - 公测定档4月23日、前瞻节目预告、角色档案介绍等官方资讯</li>
+                                <li><strong>官方资讯:</strong> 38条 (40.9%) - 公测定档4月23日、前瞻节目预告、角色档案介绍等</li>
                                 <li><strong>角色讨论:</strong> 13条 (14.0%) - 真红、娜娜莉、薄荷、早雾、浔等角色相关内容及同人创作</li>
                                 <li><strong>线下活动:</strong> 11条 (11.8%) - Apple授权专营店联动活动（4月8日-20日）、萤火虫漫展参展等</li>
                                 <li><strong>玩家反馈:</strong> 10条 (10.8%) - 线下试玩体验、画面评价、BUG反馈等</li>
@@ -348,8 +387,7 @@
                                 <li><strong>其他:</strong> 11条 (11.8%) - 抽奖活动、跨游戏话题讨论等</li>
                                 <li><strong>测试相关:</strong> 3条 (3.2%) - 奇点测试、收容测试、共存测试回顾</li>
                             </ul>
-                        </div>
-                        <div class="data-section">
+
                             <h4>核心发现</h4>
                             <ul class="data-list">
                                 <li><strong>公测热度高涨：</strong>4月23日全平台公测定档消息引发广泛关注，预约量突破3000万，全球社媒关注数达500万</li>
@@ -364,5 +402,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>
