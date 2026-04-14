@@ -757,20 +757,28 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const tabs = document.querySelectorAll('.date-tab');
-            const contents = document.querySelectorAll('.date-content');
             
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    // Remove active class from all tabs and contents
-                    tabs.forEach(t => t.classList.remove('active'));
-                    contents.forEach(c => c.style.display = 'none');
+                    // 找到当前按钮所属的模块容器（最近的 .section）
+                    const section = tab.closest('.section');
+                    if (!section) return;
+
+                    // 仅处理当前模块内的标签和内容
+                    const moduleTabs = section.querySelectorAll('.date-tab');
+                    const moduleContents = section.querySelectorAll('.date-content');
                     
-                    // Add active class to clicked tab
+                    // 移除当前模块内所有标签的激活状态
+                    moduleTabs.forEach(t => t.classList.remove('active'));
+                    // 隐藏当前模块内所有内容块
+                    moduleContents.forEach(c => c.style.display = 'none');
+                    
+                    // 激活当前点击的标签
                     tab.classList.add('active');
                     
-                    // Show corresponding content
+                    // 显示对应的内容块
                     const date = tab.getAttribute('data-date');
-                    const targetContent = document.querySelector(`.date-content[data-date="${date}"]`);
+                    const targetContent = section.querySelector(`.date-content[data-date="${date}"]`);
                     if (targetContent) {
                         targetContent.style.display = 'block';
                     }
