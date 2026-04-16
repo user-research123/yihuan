@@ -5,247 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>《异环》AI 辅助市场监控日报网页</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
+            background-color: #f5f5f5; color: #333; line-height: 1.6;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            font-size: 28px;
-        }
-
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 28px; }
         .section {
-            background: white;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: white; border-radius: 8px; padding: 25px;
+            margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
         .section-title {
-            font-size: 22px;
-            color: #34495e;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #3498db;
+            font-size: 22px; color: #34495e; margin-bottom: 20px;
+            padding-bottom: 10px; border-bottom: 2px solid #3498db;
         }
-
-        /* 总结部分样式 */
-        .summary-content {
-            line-height: 1.8;
-        }
-
-        .summary-item {
-            margin-bottom: 15px;
-        }
-
-        .summary-label {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        /* 图表占位样式 */
+        .summary-content { line-height: 1.8; }
+        .summary-item { margin-bottom: 15px; }
+        .summary-label { font-weight: bold; color: #2c3e50; }
         .chart-placeholder {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 400px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            text-align: center;
+            height: 400px; border-radius: 8px; display: flex;
+            align-items: center; justify-content: center; color: white;
+            font-size: 18px; text-align: center;
         }
-
-        /* 时间轴样式 */
-        .timeline {
-            position: relative;
-            padding-left: 30px;
-        }
-
+        .timeline { position: relative; padding-left: 30px; }
         .timeline::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #3498db;
+            content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
+            width: 2px; background: #3498db;
         }
-
         .timeline-item {
-            position: relative;
-            margin-bottom: 25px;
-            padding-left: 20px;
+            position: relative; margin-bottom: 25px; padding-left: 20px;
         }
-
         .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -24px;
-            top: 5px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #3498db;
-            border: 2px solid white;
+            content: ''; position: absolute; left: -24px; top: 5px;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: #3498db; border: 2px solid white;
         }
-
-        .timeline-date {
-            font-weight: bold;
-            color: #3498db;
-            margin-bottom: 5px;
-        }
-
-        .timeline-content {
-            color: #555;
-        }
-
-        /* 日期按钮样式 */
-        .date-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
+        .timeline-date { font-weight: bold; color: #3498db; margin-bottom: 5px; }
+        .timeline-content { color: #555; }
+        .date-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .date-tab {
-            padding: 8px 16px;
-            border: 2px solid #3498db;
-            background: white;
-            color: #3498db;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
+            padding: 8px 16px; border: 2px solid #3498db; background: white;
+            color: #3498db; border-radius: 20px; cursor: pointer;
+            transition: all 0.3s ease; font-size: 14px;
         }
-
-        .date-tab:hover {
-            background: #3498db;
-            color: white;
-        }
-
-        .date-tab.active {
-            background: #3498db;
-            color: white;
-        }
-
-        /* 竞品模块样式 */
+        .date-tab:hover { background: #3498db; color: white; }
+        .date-tab.active { background: #3498db; color: white; }
         .competitor-module {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #3498db;
+            margin-bottom: 30px; padding: 20px; background: #f8f9fa;
+            border-radius: 8px; border-left: 4px solid #3498db;
         }
-
-        .competitor-title {
-            font-size: 18px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .competitor-content {
-            line-height: 1.8;
-        }
-
-        .data-section {
-            margin-top: 15px;
-        }
-
-        .data-section h4 {
-            color: #34495e;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .data-list {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .data-list li {
-            padding: 5px 0;
-            color: #555;
-        }
-
-        /* 微博分析内容样式 */
-        .weibo-analysis {
-            background: #fff;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 10px;
-        }
-
-        .weibo-analysis h5 {
-            color: #2c3e50;
-            margin: 15px 0 10px 0;
-            font-size: 15px;
-        }
-
-        .weibo-analysis p {
-            margin: 8px 0;
-            color: #555;
-        }
-
-        .weibo-analysis ul {
-            margin-left: 20px;
-            margin-top: 5px;
-        }
-
-        .weibo-analysis li {
-            margin: 5px 0;
-            color: #555;
-        }
-
+        .competitor-title { font-size: 18px; color: #2c3e50; margin-bottom: 15px; font-weight: bold; }
+        .competitor-content { line-height: 1.8; }
+        .data-section { margin-top: 15px; }
+        .data-section h4 { color: #34495e; margin-bottom: 10px; font-size: 16px; }
+        .data-list { list-style: none; padding-left: 0; }
+        .data-list li { padding: 5px 0; color: #555; }
+        .weibo-analysis { background: #fff; padding: 15px; border-radius: 6px; margin-top: 10px; }
+        .weibo-analysis h5 { color: #2c3e50; margin: 15px 0 10px 0; font-size: 15px; }
+        .weibo-analysis p { margin: 8px 0; color: #555; }
+        .weibo-analysis ul { margin-left: 20px; margin-top: 5px; }
+        .weibo-analysis li { margin: 5px 0; color: #555; }
         .example-quote {
-            background: #f0f7ff;
-            padding: 10px;
-            border-left: 3px solid #3498db;
-            margin: 8px 0;
-            font-style: italic;
+            background: #f0f7ff; padding: 10px;
+            border-left: 3px solid #3498db; margin: 8px 0; font-style: italic;
         }
-
-        /* 响应式设计 */
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 22px;
-            }
-
-            .section {
-                padding: 15px;
-            }
-
-            .date-tabs {
-                gap: 5px;
-            }
-
-            .date-tab {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
+            .container { padding: 10px; }
+            h1 { font-size: 22px; }
+            .section { padding: 15px; }
+            .date-tabs { gap: 5px; }
+            .date-tab { padding: 6px 12px; font-size: 12px; }
         }
     </style>
 </head>
@@ -264,7 +95,7 @@
                 <div class="summary-item">
                     <span class="summary-label">竞品动态：</span>
                     <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li><strong>螃蟹：</strong>数据获取中</li>
+                        <li><strong>螃蟹：</strong>已完成分析（28个商品）</li>
                         <li><strong>盼之：</strong>数据获取中</li>
                         <li><strong>闲鱼：</strong>已完成分析（100个商品）</li>
                     </ul>
@@ -295,7 +126,7 @@
                 <div class="timeline-item">
                     <div class="timeline-date">2026-03-26</div>
                     <div class="timeline-content">
-                        玩家可通过定制专属“海特洛市民卡”并完成指定任务，参与预抽卡。奖池包含捏造骰子、方斯（游戏货币）、无彩染剂、甲硬币及资深猎人攻略等启程专属道具。该活动旨在让玩家在公测前提前积累资源。
+                        玩家可通过定制专属"海特洛市民卡"并完成指定任务，参与预抽卡。奖池包含捏造骰子、方斯（游戏货币）、无彩染剂、甲硬币及资深猎人攻略等启程专属道具。该活动旨在让玩家在公测前提前积累资源。
                     </div>
                 </div>
             </div>
@@ -307,13 +138,93 @@
             
             <!-- 日期按钮 -->
             <div class="date-tabs" id="competitor-date-tabs">
-                <button class="date-tab active" data-date="2026-04-14">2026-04-14</button>
-            
+                <button class="date-tab active" data-date="2026-04-16">2026-04-16</button>
+                <button class="date-tab" data-date="2026-04-14">2026-04-14</button>
                 <button class="date-tab" data-date="2026-04-13">2026-04-13</button>
             </div>
 
+            <!-- 2026-04-16 内容 -->
+            <div class="date-content active" data-date="2026-04-16">
+                <!-- 螃蟹模块 -->
+                <div class="competitor-module">
+                    <h3 class="competitor-title">竞品：螃蟹</h3>
+                    <div class="competitor-content">
+                        <p><strong>螃蟹账号《异环》商品数据分析报告</strong></p>
+                        <p>数据分析数量: 28 个 | 分析时间: 2026-04-16</p>
+                        <p><em>注：受平台反爬限制，实际爬取样本量为28个</em></p>
+                        
+                        <div class="data-section">
+                            <h4>一、商品类型有：</h4>
+                            <ul class="data-list">
+                                <li>账号（普通账号）</li>
+                                <li>内测账号</li>
+                                <li>资源号</li>
+                                <li>开局出售号</li>
+                                <li>开局欧皇号</li>
+                                <li>限定号</li>
+                            </ul>
+                        </div>
+
+                        <div class="data-section">
+                            <h4>二、账号的详细信息</h4>
+                            
+                            <h4 style="margin-top: 15px;">1）价格分布分析</h4>
+                            <ul class="data-list">
+                                <li><strong>价格范围:</strong> ¥460 - ¥4,350</li>
+                                <li><strong>中位数价格:</strong> ¥850</li>
+                                <li><strong>平均价格:</strong> ¥1,028.57</li>
+                                <li><strong>高价商品(≥¥1,500):</strong> 3 个 (10.7%)</li>
+                            </ul>
+                            
+                            <h4 style="margin-top: 15px;">2）价格区间分布</h4>
+                            <ul class="data-list">
+                                <li><strong>0-500元:</strong> 6 个 (21.4%)</li>
+                                <li><strong>500-1000元:</strong> 11 个 (39.3%)</li>
+                                <li><strong>1000-5000元:</strong> 11 个 (39.3%)</li>
+                                <li><strong>5000-10000元:</strong> 0 个 (0%)</li>
+                                <li><strong>10000元以上:</strong> 0 个 (0%)</li>
+                            </ul>
+                            
+                            <h4 style="margin-top: 15px;">3）平台分布</h4>
+                            <ul class="data-list">
+                                <li><strong>QQ:</strong> 28 个 (100%)</li>
+                                <li><strong>微信:</strong> 0 个 (0%)</li>
+                            </ul>
+                            
+                            <h4 style="margin-top: 15px;">4）标签特征</h4>
+                            <ul class="data-list">
+                                <li><strong>找回包赔:</strong> 28 个 (100%)</li>
+                                <li><strong>无货立赔:</strong> 0 个</li>
+                            </ul>
+                            
+                            <h4 style="margin-top: 15px;">5）商品类型分布</h4>
+                            <ul class="data-list">
+                                <li><strong>内测账号:</strong> 12 个 (42.9%)</li>
+                                <li><strong>普通账号:</strong> 13 个 (46.4%)</li>
+                                <li><strong>资源号:</strong> 1 个 (3.6%)</li>
+                                <li><strong>开局出售号:</strong> 1 个 (3.6%)</li>
+                                <li><strong>开局欧皇号:</strong> 1 个 (3.6%)</li>
+                                <li><strong>限定号:</strong> 1 个 (3.6%)</li>
+                            </ul>
+                        </div>
+
+                        <div class="data-section">
+                            <h4>三、核心发现</h4>
+                            <ul class="data-list">
+                                <li><strong>内测账号价值高：</strong>内测账号占比42.9%，价格普遍在¥500-¥4,350之间，显示内测资格具有较高市场价值</li>
+                                <li><strong>价格集中在中低区间：</strong>60.7%的商品价格在¥500-¥1000之间，符合主流玩家消费能力</li>
+                                <li><strong>安全保障全覆盖：</strong>100%商品标注"找回包赔"，显示平台安全保障机制完善</li>
+                                <li><strong>QQ平台主导：</strong>所有商品均为QQ平台，与游戏主要用户群体特征一致</li>
+                                <li><strong>商品标题同质化：</strong>标题多使用"内测返利"、"找回包赔"等功能性描述，差异化程度较低</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 2026-04-14 内容 -->
-            <div class="date-content active" data-date="2026-04-14">
+            <div class="date-content" data-date="2026-04-14" style="display: none;">            <!-- 2026-04-14 内容 -->
+            <div class="date-content" data-date="2026-04-14" style="display: none;">
                 <!-- 螃蟹模块 -->
                 <div class="competitor-module">
                     <h3 class="competitor-title">竞品一：螃蟹</h3>
@@ -536,7 +447,7 @@
                             <h4>三、命名特征分析</h4>
                             <ul class="data-list">
                                 <li><strong>主要风格:</strong> 功能/福利导向类 (100%)</li>
-                                <li><strong>特征描述:</strong> 均强调“内测”、“返利”、“累冲”等数值利益点，直击玩家对早期投入回报的关注。</li>
+                                <li><strong>特征描述:</strong> 均强调"内测"、"返利"、"累冲"等数值利益点，直击玩家对早期投入回报的关注。</li>
                             </ul>
                         </div>
                     </div>
@@ -628,7 +539,6 @@
             <!-- 日期按钮 -->
             <div class="date-tabs" id="user-feedback-date-tabs">
                 <button class="date-tab active" data-date="2026-04-14">2026-04-14</button>
-            
                 <button class="date-tab" data-date="2026-04-13">2026-04-13</button>
             </div>
 
@@ -711,30 +621,23 @@
         </div>
     </div>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const tabs = document.querySelectorAll('.date-tab');
             
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    // 找到当前按钮所属的模块容器（最近的 .section）
                     const section = tab.closest('.section');
                     if (!section) return;
 
-                    // 仅处理当前模块内的标签和内容
                     const moduleTabs = section.querySelectorAll('.date-tab');
                     const moduleContents = section.querySelectorAll('.date-content');
                     
-                    // 移除当前模块内所有标签的激活状态
                     moduleTabs.forEach(t => t.classList.remove('active'));
-                    // 隐藏当前模块内所有内容块
                     moduleContents.forEach(c => c.style.display = 'none');
                     
-                    // 激活当前点击的标签
                     tab.classList.add('active');
                     
-                    // 显示对应的内容块
                     const date = tab.getAttribute('data-date');
                     const targetContent = section.querySelector(`.date-content[data-date="${date}"]`);
                     if (targetContent) {
@@ -744,6 +647,5 @@
             });
         });
     </script>
-
 </body>
 </html>
