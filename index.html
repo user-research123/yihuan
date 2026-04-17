@@ -245,7 +245,7 @@
             </div>
 
             <!-- 2026-04-16 内容 -->
-            <div class="date-content" data-date="2026-04-16">
+            <div class="date-content" data-date="2026-04-16" style="display: none;">
                 <!-- 螃蟹模块 -->
                 <div class="competitor-module">
                     <h3 class="competitor-title">竞品：螃蟹</h3>
@@ -782,6 +782,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // 初始化：确保只有active的内容显示，其他都隐藏
+            document.querySelectorAll('.date-content').forEach(content => {
+                if (content.classList.contains('active')) {
+                    content.style.display = 'block';
+                } else {
+                    content.style.display = 'none';
+                }
+            });
+            
             const tabs = document.querySelectorAll('.date-tab');
             
             tabs.forEach(tab => {
@@ -793,13 +802,17 @@
                     const moduleContents = section.querySelectorAll('.date-content');
                     
                     moduleTabs.forEach(t => t.classList.remove('active'));
-                    moduleContents.forEach(c => c.style.display = 'none');
+                    moduleContents.forEach(c => {
+                        c.classList.remove('active');
+                        c.style.display = 'none';
+                    });
                     
                     tab.classList.add('active');
                     
                     const date = tab.getAttribute('data-date');
                     const targetContent = section.querySelector(`.date-content[data-date="${date}"]`);
                     if (targetContent) {
+                        targetContent.classList.add('active');
                         targetContent.style.display = 'block';
                     }
                 });
