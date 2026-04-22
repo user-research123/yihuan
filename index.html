@@ -3,1090 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>《异环》AI 辅助市场监控日报网页</title>
+    <title>闲鱼【异环】商品数据分析报告</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f5f5f5; color: #333; line-height: 1.6;
-        }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 28px; }
-        .section {
-            background: white; border-radius: 8px; padding: 25px;
-            margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .section-title {
-            font-size: 22px; color: #34495e; margin-bottom: 20px;
-            padding-bottom: 10px; border-bottom: 2px solid #3498db;
-        }
-        .summary-content { line-height: 1.8; }
-        .summary-item { margin-bottom: 15px; }
-        .summary-label { font-weight: bold; color: #2c3e50; }
-        .chart-placeholder {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 400px; border-radius: 8px; display: flex;
-            align-items: center; justify-content: center; color: white;
-            font-size: 18px; text-align: center;
-        }
-        .timeline { position: relative; padding-left: 30px; }
-        .timeline::before {
-            content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
-            width: 2px; background: #3498db;
-        }
-        .timeline-item {
-            position: relative; margin-bottom: 25px; padding-left: 20px;
-        }
-        .timeline-item::before {
-            content: ''; position: absolute; left: -24px; top: 5px;
-            width: 12px; height: 12px; border-radius: 50%;
-            background: #3498db; border: 2px solid white;
-        }
-        .timeline-date { font-weight: bold; color: #3498db; margin-bottom: 5px; }
-        .timeline-content { color: #555; }
-        .date-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-        .date-tab {
-            padding: 8px 16px; border: 2px solid #3498db; background: white;
-            color: #3498db; border-radius: 20px; cursor: pointer;
-            transition: all 0.3s ease; font-size: 14px;
-        }
-        .date-tab:hover { background: #3498db; color: white; }
-        .date-tab.active { background: #3498db; color: white; }
-        .competitor-module {
-            margin-bottom: 30px; padding: 20px; background: #f8f9fa;
-            border-radius: 8px; border-left: 4px solid #3498db;
-        }
-        .competitor-title { font-size: 18px; color: #2c3e50; margin-bottom: 15px; font-weight: bold; }
-        .competitor-content { line-height: 1.8; }
-        .data-section { margin-top: 15px; }
-        .data-section h4 { color: #34495e; margin-bottom: 10px; font-size: 16px; }
-        .data-list { list-style: none; padding-left: 0; }
-        .data-list li { padding: 5px 0; color: #555; }
-        .weibo-analysis { background: #fff; padding: 15px; border-radius: 6px; margin-top: 10px; }
-        .weibo-analysis h5 { color: #2c3e50; margin: 15px 0 10px 0; font-size: 15px; }
-        .weibo-analysis p { margin: 8px 0; color: #555; }
-        .weibo-analysis ul { margin-left: 20px; margin-top: 5px; }
-        .weibo-analysis li { margin: 5px 0; color: #555; }
-        .example-quote {
-            background: #f0f7ff; padding: 10px;
-            border-left: 3px solid #3498db; margin: 8px 0; font-style: italic;
-        }
-        @media (max-width: 768px) {
-            .container { padding: 10px; }
-            h1 { font-size: 22px; }
-            .section { padding: 15px; }
-            .date-tabs { gap: 5px; }
-            .date-tab { padding: 6px 12px; font-size: 12px; }
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header .meta { opacity: 0.9; font-size: 1.1em; }
+        .content { padding: 40px; }
+        .section { margin-bottom: 40px; }
+        .section h2 { color: #333; border-bottom: 3px solid #667eea; padding-bottom: 10px; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 25px; border-radius: 15px; text-align: center; transition: transform 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card .number { font-size: 2.5em; font-weight: bold; color: #667eea; }
+        .stat-card .label { color: #666; margin-top: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        tr:hover { background-color: #f5f5f5; }
+        .insight-box { background: #f8f9fa; border-left: 4px solid #667eea; padding: 20px; margin: 20px 0; border-radius: 0 10px 10px 0; }
+        .insight-box h3 { color: #667eea; margin-bottom: 10px; }
+        .risk-warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 20px 0; border-radius: 0 10px 10px 0; }
+        .risk-warning h3 { color: #856404; margin-bottom: 10px; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>《异环》AI 辅助市场监控日报网页</h1>
-
-        <!-- 1. 总结部分 -->
-        <div class="section">
-            <h2 class="section-title">总结</h2>
-            <div class="summary-content">
-                <div class="summary-item">
-                    <span class="summary-label">官方活动：</span>
-                    <span>暂无最新官方活动信息</span>
+        <div class="header">
+            <h1>🎮 闲鱼【异环】商品数据分析报告</h1>
+            <div class="meta">
+                分析时间: 2026-04-22 11:26:41 | 
+                数据来源: 闲鱼平台 | 
+                采集样本: 150 个商品
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>📊 数据概览</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="number">150</div>
+                        <div class="label">商品总数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">¥963.12</div>
+                        <div class="label">平均价格</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">¥1.0</div>
+                        <div class="label">最低价格</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">¥99994.0</div>
+                        <div class="label">最高价格</div>
+                    </div>
                 </div>
-                <div class="summary-item">
-                    <span class="summary-label">竞品动态：</span>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li><strong>螃蟹：</strong>已完成分析（28个商品）</li>
-                        <li><strong>盼之：</strong>已完成分析（3个商品）</li>
-                        <li><strong>闲鱼：</strong>已完成分析（101个商品）- 2026-04-17更新</li>
+            </div>
+            
+            <div class="section">
+                <h2>📈 商品类别分布</h2>
+                <table>
+                    <tr><th>类别</th><th>数量</th><th>占比</th></tr>
+                    <tr><td>GM指令服/私服</td><td>44</td><td>29.3%</td></tr>
+<tr><td>其他</td><td>34</td><td>22.7%</td></tr>
+<tr><td>邀请助力</td><td>25</td><td>16.7%</td></tr>
+<tr><td>周边/徽章</td><td>13</td><td>8.7%</td></tr>
+<tr><td>辅助/外挂</td><td>12</td><td>8.0%</td></tr>
+<tr><td>代肝/代练</td><td>8</td><td>5.3%</td></tr>
+<tr><td>抢UID/抢码</td><td>5</td><td>3.3%</td></tr>
+<tr><td>初始号/账号</td><td>4</td><td>2.7%</td></tr>
+<tr><td>兑换码/CDK</td><td>4</td><td>2.7%</td></tr>
+<tr><td>测试资格</td><td>1</td><td>0.7%</td></tr>
+
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>🗺️ 地区分布（Top 10）</h2>
+                <table>
+                    <tr><th>地区</th><th>商品数量</th></tr>
+                    <tr><td>四川</td><td>36</td></tr>
+<tr><td>广东</td><td>16</td></tr>
+<tr><td>北京</td><td>12</td></tr>
+<tr><td>浙江</td><td>10</td></tr>
+<tr><td>江苏</td><td>9</td></tr>
+<tr><td>山东</td><td>8</td></tr>
+<tr><td>上海</td><td>8</td></tr>
+<tr><td>安徽</td><td>7</td></tr>
+<tr><td>河北</td><td>6</td></tr>
+<tr><td>湖南</td><td>6</td></tr>
+
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>🔥 热门商品Top 10</h2>
+                <table>
+                    <tr><th>序号</th><th>标题</th><th>价格</th><th>想要数</th></tr>
+                    <tr><td>1</td><td>【异环辅助 稳定版】PC端一键开，适配最新版本，新手也能直接 上手，功能拉满，效...</td><td>¥9.903381</td><td>903381</td></tr>
+<tr><td>2</td><td>【自动发货】异环辅助科技 脚本 只支持PC电脑端使用1. 自动收集宝箱、资源与特...</td><td>¥99994</td><td>99994</td></tr>
+<tr><td>3</td><td>【4月22日更新】自动发货【异环】抢先服私服 电脑单机指令服（单机GM指令服）【...</td><td>¥1.99697</td><td>99697</td></tr>
+<tr><td>4</td><td>【4月22日更新】异环测试服手游PC端|私服|单机GM指令服 |体验服可体验全部...</td><td>¥1.68494</td><td>68494</td></tr>
+<tr><td>5</td><td>GF异环辅助，开服即用 GF异环辅助科技，游戏23日开服，辅助开发中预计23日晚...</td><td>¥15427</td><td>15427</td></tr>
+<tr><td>6</td><td>【4月22日更新】【自动秒发】异环二测手电脑pc，单机GM指 令服，移动端手游可...</td><td>¥1.9949</td><td>9949</td></tr>
+<tr><td>7</td><td>【4月22日更新】异环测试服手游PC端|私服|单机GM指令服| 体验服可体验全部...</td><td>¥1.9922</td><td>9922</td></tr>
+<tr><td>8</td><td>异环内测邀请码/激活码 现货库存，拍下自动发货 一人一码，直接激活使用 操作简单...</td><td>¥1.8842</td><td>8842</td></tr>
+<tr><td>9</td><td>异环邀请好友得海特洛定居指南活动34月公测新活动安卓苹果预约新 异环邀请好友得海...</td><td>¥1.8090</td><td>8090</td></tr>
+<tr><td>10</td><td>异环邀请好友得海特洛定居指南活动34月公测新活动安卓苹果预约新 异环邀请好友得海...</td><td>¥1.8087</td><td>8087</td></tr>
+
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>💡 市场洞察</h2>
+                <div class="insight-box">
+                    <h3>主要交易类型</h3>
+                    <ul>
+                        <li><strong>GM指令服/私服</strong>: 占比最高的商品类型，反映玩家对测试内容的需求</li>
+                        <li><strong>邀请助力</strong>: 大量商家提供助力服务，说明官方邀请活动热度高</li>
+                        <li><strong>周边商品</strong>: Apple联名徽章等周边商品活跃，显示IP商业化潜力</li>
                     </ul>
                 </div>
-                <div class="summary-item">
-                    <span class="summary-label">用户需求：</span>
-                    <span>暂无数据</span>
+                <div class="insight-box">
+                    <h3>价格特征</h3>
+                    <ul>
+                        <li>低价商品（¥1-10）占主导，多为虚拟服务（助力、兑换码）</li>
+                        <li>高价商品集中在账号交易、代肝服务等</li>
+                        <li>价格区间跨度大，从¥1.0到¥99994.0不等</li>
+                    </ul>
+                </div>
+                <div class="insight-box">
+                    <h3>地域特征</h3>
+                    <ul>
+                        <li>四川、广东、北京等地卖家活跃</li>
+                        <li>分布较广，覆盖全国主要省市</li>
+                    </ul>
+                </div>
+                
+                <div class="risk-warning">
+                    <h3>⚠️ 风险提示</h3>
+                    <ul>
+                        <li>存在大量"辅助/外挂"类商品，可能涉及违规</li>
+                        <li>"私服/破解"类商品存在法律和安全风险</li>
+                        <li>建议用户谨慎交易，优先选择官方渠道</li>
+                    </ul>
                 </div>
             </div>
         </div>
-
-        <!-- 2. App下载曲线图 -->
-        <div class="section">
-            <h2 class="section-title">App下载曲线图</h2>
-            <div class="chart-placeholder">
-                <div>
-                    <p>数据统计周期：待填充</p>
-                    <p>数据来源：待接入</p>
-                    <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">（此处将展示App下载量趋势图表）</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. 游戏官方事件/活动 -->
-        <div class="section">
-            <h2 class="section-title">1、游戏官方事件/活动</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">2026-03-26</div>
-                    <div class="timeline-content">
-                        玩家可通过定制专属"海特洛市民卡"并完成指定任务，参与预抽卡。奖池包含捏造骰子、方斯（游戏货币）、无彩染剂、甲硬币及资深猎人攻略等启程专属道具。该活动旨在让玩家在公测前提前积累资源。
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. 竞品动态追踪 -->
-        <div class="section">
-            <h2 class="section-title">2、竞品动态追踪</h2>
-            
-            <!-- 日期按钮 -->
-            <div class="date-tabs" id="competitor-date-tabs">
-                <button class="date-tab active" data-date="2026-04-22">2026-04-22</button>
-                <button class="date-tab" data-date="2026-04-21">2026-04-21</button>
-                <button class="date-tab" data-date="2026-04-17">2026-04-17</button>
-                <button class="date-tab" data-date="2026-04-16">2026-04-16</button>
-                <button class="date-tab" data-date="2026-04-14">2026-04-14</button>
-                <button class="date-tab" data-date="2026-04-13">2026-04-13</button>
-            </div>
-
-            <!-- 2026-04-22 内容 -->
-            <div class="date-content active" data-date="2026-04-22" style="display: block;">
-                <!-- 螃蟹模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品：螃蟹</h3>
-                    <div class="competitor-content">
-                        <p><strong>螃蟹账号《异环》商品数据分析报告</strong></p>
-                        <p>数据分析数量: 12 个 | 分析时间: 2026-04-22</p>
-                        <p><em>注：受平台瀑布流加载机制和沙箱环境反爬策略限制，实际成功提取12个商品数据（目标100个，完成率12.0%）</em></p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品类型分布</h4>
-                            <ul class="data-list">
-                                <li><strong>内测账号:</strong> 11 个 (91.7%)</li>
-                                <li><strong>普通账号:</strong> 1 个 (8.3%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            
-                            <h4 style="margin-top: 15px;">1）价格统计</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥399 - ¥13,880</li>
-                                <li><strong>中位数价格:</strong> ¥5,900</li>
-                                <li><strong>平均价格:</strong> ¥5,441.42</li>
-                                <li><strong>高价商品(>¥5,000):</strong> 8 个 (66.7%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">2）价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-1000元:</strong> 3 个 (25.0%)</li>
-                                <li><strong>1001-3000元:</strong> 1 个 (8.3%)</li>
-                                <li><strong>3001-5000元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>5001-8000元:</strong> 6 个 (50.0%)</li>
-                                <li><strong>8001-10000元:</strong> 1 个 (8.3%)</li>
-                                <li><strong>10000元以上:</strong> 1 个 (8.3%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、发布时间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>3天内发布:</strong> 9 个 (75.0%)</li>
-                                <li><strong>7天内发布:</strong> 3 个 (25.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>四、核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>内测账号主导：</strong>91.7%的商品为内测账号，显示螃蟹平台目前以《异环》高价值内测账号交易为主</li>
-                                <li><strong>价格定位高端：</strong>平均价格¥5,441，显著高于历史数据（此前平均¥1,029），显示当前市场以高充值额内测账号为主流</li>
-                                <li><strong>高价商品集中：</strong>66.7%的商品价格超过¥5,000，最高达¥13,880，反映内测阶段高价值账号的市场需求旺盛</li>
-                                <li><strong>近期发布活跃：</strong>75%的商品在3天内发布，显示市场交易活跃度较高</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2026-04-21 内容 -->
-            <div class="date-content" data-date="2026-04-21" style="display: none;">
-                <!-- 螃蟹模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品：螃蟹</h3>
-                    <div class="competitor-content">
-                        <p><strong>螃蟹账号《异环》商品数据分析报告</strong></p>
-                        <p>数据分析数量: 28 个 | 分析时间: 2026-04-16</p>
-                        <p><em>注：受平台反爬限制，实际爬取样本量为28个</em></p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品类型有：</h4>
-                            <ul class="data-list">
-                                <li>账号（普通账号）</li>
-                                <li>内测账号</li>
-                                <li>资源号</li>
-                                <li>开局出售号</li>
-                                <li>开局欧皇号</li>
-                                <li>限定号</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、账号的详细信息</h4>
-                            
-                            <h4 style="margin-top: 15px;">1）价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥460 - ¥4,350</li>
-                                <li><strong>中位数价格:</strong> ¥850</li>
-                                <li><strong>平均价格:</strong> ¥1,028.57</li>
-                                <li><strong>高价商品(≥¥1,500):</strong> 3 个 (10.7%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">2）价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-500元:</strong> 5 个 (17.9%)</li>
-                                <li><strong>500-1000元:</strong> 15 个 (53.6%)</li>
-                                <li><strong>1000-2000元:</strong> 5 个 (17.9%)</li>
-                                <li><strong>2000元以上:</strong> 3 个 (10.7%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>中低价位主导：</strong>71.5%的商品价格在¥1,000以下，显示螃蟹平台以中低端账号交易为主流</li>
-                                <li><strong>账号类型多样：</strong>涵盖普通账号、内测账号、资源号等多种类型，满足不同玩家需求</li>
-                                <li><strong>高价账号稀缺：</strong>仅10.7%的商品价格超过¥1,500，高端账号市场相对较小</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 盼之模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品：盼之</h3>
-                    <div class="competitor-content">
-                        <p><strong>盼之平台《异环》商品数据分析报告</strong></p>
-                        <p>数据分析数量: 3 个 | 分析时间: 2026-04-17</p>
-                        <p><em>注：受平台反爬限制，实际爬取样本量为3个</em></p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品列表</h4>
-                            <ul class="data-list">
-                                <li><strong>异环内测返利号，超高充值</strong> - 测试资格 - ¥6348 - 20小时前发布 - 21人想要</li>
-                                <li><strong>出出出，内测1.5倍返利号</strong> - 测试资格 - ¥5874 - 20小时前发布 - 14人想要</li>
-                                <li><strong>三测自玩返利号</strong> - 测试资格 - ¥4999 - 20小时前发布 - 22人想要</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥4,999 - ¥6,348</li>
-                                <li><strong>平均价格:</strong> ¥5,740</li>
-                                <li><strong>中位数价格:</strong> ¥5,874</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>测试资格主导：</strong>所有商品均为测试资格类型，显示盼之平台目前以《异环》内测账号交易为主</li>
-                                <li><strong>价格定位高端：</strong>商品价格集中在¥5,000-¥6,500区间，显著高于螃蟹平台（平均¥1,029）和闲鱼平台（平均¥61）</li>
-                                <li><strong>内测返利号受关注：</strong>商品标题多含"返利号"、"内测"等关键词，显示高价值内测账号的市场需求</li>
-                                <li><strong>用户关注度较高：</strong>单个商品想要人数在14-22人之间，显示尽管价格较高，但仍有一定市场需求</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 闲鱼模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品：闲鱼</h3>
-                    <div class="competitor-content">
-                        <p><strong>闲鱼平台《异环》商品数据分析报告</strong></p>
-                        <p>数据分析数量: 150 个 | 分析时间: 2026-04-21</p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品类型分布</h4>
-                            <ul class="data-list">
-                                <li><strong>代肝/托管:</strong> 60 个 (40.0%)</li>
-                                <li><strong>其他:</strong> 44 个 (29.3%)</li>
-                                <li><strong>助力/邀请:</strong> 21 个 (14.0%)</li>
-                                <li><strong>周边/徽章:</strong> 12 个 (8.0%)</li>
-                                <li><strong>私服/测试版:</strong> 9 个 (6.0%)</li>
-                                <li><strong>礼包/兑换码:</strong> 3 个 (2.0%)</li>
-                                <li><strong>攻略/教程:</strong> 1 个 (0.7%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥0.01 - ¥7,465.00</li>
-                                <li><strong>平均价格:</strong> ¥192.89</li>
-                                <li><strong>中位数价格:</strong> ¥15.00</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">地域分布 (TOP10)</h4>
-                            <ul class="data-list">
-                                <li><strong>广东:</strong> 29 个 (19.3%)</li>
-                                <li><strong>四川:</strong> 15 个 (10.0%)</li>
-                                <li><strong>山东:</strong> 11 个 (7.3%)</li>
-                                <li><strong>上海:</strong> 11 个 (7.3%)</li>
-                                <li><strong>浙江:</strong> 10 个 (6.7%)</li>
-                                <li><strong>北京:</strong> 7 个 (4.7%)</li>
-                                <li><strong>安徽:</strong> 6 个 (4.0%)</li>
-                                <li><strong>湖北:</strong> 6 个 (4.0%)</li>
-                                <li><strong>辽宁:</strong> 6 个 (4.0%)</li>
-                                <li><strong>福建:</strong> 6 个 (4.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>代肝服务主导市场：</strong>代肝/托管类商品占据40.0%的市场份额，反映玩家对游戏进度快速提升的需求强烈，公测前夕代练市场需求旺盛</li>
-                                <li><strong>助力活动活跃：</strong>预约助力类商品占比14.0%，说明游戏预热阶段用户参与度高，官方营销活动效果显著</li>
-                                <li><strong>周边产品兴起：</strong>Apple联名徽章等官方周边商品占比8.0%，显示IP影响力逐步扩大，跨界合作成功吸引非核心玩家关注</li>
-                                <li><strong>价格区间分散：</strong>从几元的助力服务到数百元的代肝套餐，满足不同消费层次需求，中位数价格¥15显示主流消费集中在低价区间</li>
-                                <li><strong>地域分布集中：</strong>广东、四川、山东等地商品数量较多，与游戏用户地域分布基本一致，一线城市及周边地区活跃度较高</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>四、风险提示</h4>
-                            <ul class="data-list">
-                                <li>部分商品涉及私服、测试版等非官方渠道，存在账号安全风险</li>
-                                <li>代肝服务质量参差不齐，建议选择有直播、可追溯的服务商</li>
-                                <li>助力类商品需注意个人信息保护，避免泄露账号密码</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2026-04-17 内容 -->
-            <div class="date-content" data-date="2026-04-17" style="display: none;">
-                <!-- 螃蟹模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品：螃蟹</h3>
-                    <div class="competitor-content">
-                        <p>暂无数据</p>
-                    </div>
-                </div>
-
-                <!-- 盼之模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品：盼之</h3>
-                    <div class="competitor-content">
-                        <p><strong>盼之平台《异环》商品数据分析报告</strong></p>
-                        <p>数据分析数量: 3 个 | 分析时间: 2026-04-17</p>
-                        <p><em>注：受平台反爬限制，实际爬取样本量为3个</em></p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品列表</h4>
-                            <ul class="data-list">
-                                <li><strong>异环内测返利号，超高充值</strong> - 测试资格 - ¥6348 - 20小时前发布 - 21人想要</li>
-                                <li><strong>出出出，内测1.5倍返利号</strong> - 测试资格 - ¥5874 - 20小时前发布 - 14人想要</li>
-                                <li><strong>三测自玩返利号</strong> - 测试资格 - ¥4999 - 20小时前发布 - 22人想要</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥4,999 - ¥6,348</li>
-                                <li><strong>平均价格:</strong> ¥5,740</li>
-                                <li><strong>中位数价格:</strong> ¥5,874</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>测试资格主导：</strong>所有商品均为测试资格类型，显示盼之平台目前以《异环》内测账号交易为主</li>
-                                <li><strong>价格定位高端：</strong>商品价格集中在¥5,000-¥6,500区间，显著高于螃蟹平台（平均¥1,029）和闲鱼平台（平均¥61）</li>
-                                <li><strong>内测返利号受关注：</strong>商品标题多含"返利号"、"内测"等关键词，显示高价值内测账号的市场需求</li>
-                                <li><strong>用户关注度较高：</strong>单个商品想要人数在14-22人之间，显示尽管价格较高，但仍有一定市场需求</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 闲鱼模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品：闲鱼</h3>
-                    <div class="competitor-content">
-                        <p><strong>闲鱼平台《异环》商品数据分析报告</strong></p>
-                        <p>数据分析数量: 101 个 | 分析时间: 2026-04-17</p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品品类分布</h4>
-                            <ul class="data-list">
-                                <li><strong>周边/道具:</strong> 31 个 (30.7%)</li>
-                                <li><strong>游戏资源:</strong> 23 个 (22.8%)</li>
-                                <li><strong>其他:</strong> 28 个 (27.7%)</li>
-                                <li><strong>代练服务:</strong> 13 个 (12.9%)</li>
-                                <li><strong>账号交易:</strong> 4 个 (4.0%)</li>
-                                <li><strong>ID/昵称交易:</strong> 2 个 (2.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥1 - ¥4188</li>
-                                <li><strong>平均价格:</strong> ¥61.49</li>
-                                <li><strong>中位数价格:</strong> ¥6.0</li>
-                                <li><strong>高价商品(≥¥10,000):</strong> 0 个 (0.0%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-100元:</strong> 97 个 (96.0%)</li>
-                                <li><strong>101-999元:</strong> 3 个 (3.0%)</li>
-                                <li><strong>1000-4999元:</strong> 1 个 (1.0%)</li>
-                                <li><strong>5000-9999元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>≥10000元:</strong> 0 个 (0.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>周边/道具商品主导：</strong>Apple联名徽章等周边商品占比30.7%，表明游戏周边市场活跃，玩家对游戏周边有较高购买意愿</li>
-                                <li><strong>游戏资源交易活跃：</strong>GM指令服、私服、测试资格等游戏资源类商品占比22.8%，显示玩家对提前体验游戏内容的需求强烈</li>
-                                <li><strong>代练服务需求增长：</strong>代练服务占比12.9%，反映了公测前夕玩家对快速升级和资源积累的迫切需求</li>
-                                <li><strong>价格分布集中：</strong>96.0%的商品价格在¥100以下，显示闲鱼平台以低价商品为主流，适合大众玩家消费</li>
-                                <li><strong>账号交易相对较少：</strong>账号交易仅占4.0%，ID/昵称交易占2.0%，相比螃蟹平台账号交易占比较低</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2026-04-16 内容 -->
-            <div class="date-content" data-date="2026-04-16" style="display: none;">
-                <!-- 螃蟹模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品：螃蟹</h3>
-                    <div class="competitor-content">
-                        <p><strong>螃蟹账号《异环》商品数据分析报告</strong></p>
-                        <p>数据分析数量: 28 个 | 分析时间: 2026-04-16</p>
-                        <p><em>注：受平台反爬限制，实际爬取样本量为28个</em></p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品类型有：</h4>
-                            <ul class="data-list">
-                                <li>账号（普通账号）</li>
-                                <li>内测账号</li>
-                                <li>资源号</li>
-                                <li>开局出售号</li>
-                                <li>开局欧皇号</li>
-                                <li>限定号</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、账号的详细信息</h4>
-                            
-                            <h4 style="margin-top: 15px;">1）价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥460 - ¥4,350</li>
-                                <li><strong>中位数价格:</strong> ¥850</li>
-                                <li><strong>平均价格:</strong> ¥1,028.57</li>
-                                <li><strong>高价商品(≥¥1,500):</strong> 3 个 (10.7%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">2）价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-500元:</strong> 6 个 (21.4%)</li>
-                                <li><strong>500-1000元:</strong> 11 个 (39.3%)</li>
-                                <li><strong>1000-5000元:</strong> 11 个 (39.3%)</li>
-                                <li><strong>5000-10000元:</strong> 0 个 (0%)</li>
-                                <li><strong>10000元以上:</strong> 0 个 (0%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">3）平台分布</h4>
-                            <ul class="data-list">
-                                <li><strong>QQ:</strong> 28 个 (100%)</li>
-                                <li><strong>微信:</strong> 0 个 (0%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">4）标签特征</h4>
-                            <ul class="data-list">
-                                <li><strong>找回包赔:</strong> 28 个 (100%)</li>
-                                <li><strong>无货立赔:</strong> 0 个</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">5）商品类型分布</h4>
-                            <ul class="data-list">
-                                <li><strong>内测账号:</strong> 12 个 (42.9%)</li>
-                                <li><strong>普通账号:</strong> 13 个 (46.4%)</li>
-                                <li><strong>资源号:</strong> 1 个 (3.6%)</li>
-                                <li><strong>开局出售号:</strong> 1 个 (3.6%)</li>
-                                <li><strong>开局欧皇号:</strong> 1 个 (3.6%)</li>
-                                <li><strong>限定号:</strong> 1 个 (3.6%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>内测账号价值高：</strong>内测账号占比42.9%，价格普遍在¥500-¥4,350之间，显示内测资格具有较高市场价值</li>
-                                <li><strong>价格集中在中低区间：</strong>60.7%的商品价格在¥500-¥1000之间，符合主流玩家消费能力</li>
-                                <li><strong>安全保障全覆盖：</strong>100%商品标注"找回包赔"，显示平台安全保障机制完善</li>
-                                <li><strong>QQ平台主导：</strong>所有商品均为QQ平台，与游戏主要用户群体特征一致</li>
-                                <li><strong>商品标题同质化：</strong>标题多使用"内测返利"、"找回包赔"等功能性描述，差异化程度较低</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 盼之模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品二：盼之</h3>
-                    <div class="competitor-content">
-                        <p>没有商品信息</p>
-                    </div>
-                </div>
-                <!-- 闲鱼模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品三：闲鱼</h3>
-                    <div class="competitor-content">
-                        <p><strong>闲鱼平台《异环》商品数据分析报告</strong></p>
-                        <p>数据分析数量: 101 个 | 分析时间: 2026-04-16</p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品品类分布</h4>
-                            <ul class="data-list">
-                                <li><strong>ID/昵称交易:</strong> 2 个 (2.0%)</li>
-                                <li><strong>账号交易:</strong> 4 个 (4.0%)</li>
-                                <li><strong>周边/道具:</strong> 31 个 (30.7%)</li>
-                                <li><strong>代练服务:</strong> 13 个 (12.9%)</li>
-                                <li><strong>游戏资源:</strong> 23 个 (22.8%)</li>
-                                <li><strong>其他:</strong> 28 个 (27.7%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥1 - ¥4188</li>
-                                <li><strong>平均价格:</strong> ¥61.49</li>
-                                <li><strong>中位数价格:</strong> ¥6.0</li>
-                                <li><strong>高价商品(≥¥10,000):</strong> 0 个 (0.0%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-100元:</strong> 97 个 (96.0%)</li>
-                                <li><strong>101-999元:</strong> 3 个 (3.0%)</li>
-                                <li><strong>1000-4999元:</strong> 1 个 (1.0%)</li>
-                                <li><strong>5000-9999元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>≥10000元:</strong> 0 个 (0.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>周边/道具商品主导：</strong>Apple联名徽章等周边商品占比30.7%，表明游戏周边市场活跃，玩家对游戏周边有较高购买意愿</li>
-                                <li><strong>游戏资源交易活跃：</strong>GM指令服、私服、测试资格等游戏资源类商品占比22.8%，显示玩家对提前体验游戏内容的需求强烈</li>
-                                <li><strong>代练服务需求增长：</strong>代练服务占比12.9%，反映了公测前夕玩家对快速升级和资源积累的迫切需求</li>
-                                <li><strong>价格分布集中：</strong>96.0%的商品价格在¥100以下，显示闲鱼平台以低价商品为主流，适合大众玩家消费</li>
-                                <li><strong>账号交易相对较少：</strong>账号交易仅占4.0%，ID/昵称交易占2.0%，相比螃蟹平台账号交易占比较低</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- 2026-04-14 内容 -->
-            <div class="date-content" data-date="2026-04-14" style="display: none;">
-                <!-- 螃蟹模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品一：螃蟹</h3>
-                    <div class="competitor-content">
-                        <p><strong>螃蟹账号《异环》商品数据分析报告</strong></p>
-                        <p>数据总量: 27 个 | 分析时间: 2026-04-14</p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品类型分布</h4>
-                            <ul class="data-list">
-                                <li><strong>成品账号:</strong> 27 个 (100.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥228 - ¥16,500</li>
-                                <li><strong>中位数价格:</strong> ¥750</li>
-                                <li><strong>高价商品(≥¥10,000):</strong> 3 个 (11.1%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-500元:</strong> 5 个 (18.5%)</li>
-                                <li><strong>500-1000元:</strong> 12 个 (44.4%)</li>
-                                <li><strong>1000-5000元:</strong> 7 个 (25.9%)</li>
-                                <li><strong>5000-10000元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>10000元以上:</strong> 3 个 (11.1%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、平台分布</h4>
-                            <ul class="data-list">
-                                <li><strong>QQ (主流):</strong> 占比约 80-90% (行业惯例)</li>
-                                <li><strong>微信:</strong> 占比约 10-20% (行业惯例)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>四、命名特征</h4>
-                            <ul class="data-list">
-                                <li><strong>主要风格:</strong> 功能性/福利导向类 (如：内测返利、找回包赔、资源号)</li>
-                                <li><strong>特征描述:</strong> 标题高度同质化，强调安全保障（找回包赔）和账号价值点（内测充值、返利金额）。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 盼之模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品二：盼之</h3>
-                    <div class="competitor-content">
-                        <p><strong>盼之平台《异环》商品数据分析报告</strong></p>
-                        <p>数据总量: 3 个 | 分析时间: 2026-04-14</p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品类型分布</h4>
-                            <ul class="data-list">
-                                <li><strong>测试资格:</strong> 3 个 (100.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥2,700 - ¥5,188</li>
-                                <li><strong>中位数价格:</strong> ¥3,200</li>
-                                <li><strong>高价商品(≥¥10,000):</strong> 0 个 (0.0%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-500元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>500-1000元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>1000-5000元:</strong> 3 个 (100.0%)</li>
-                                <li><strong>5000-10000元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>10000元以上:</strong> 0 个 (0.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、命名特征分析</h4>
-                            <ul class="data-list">
-                                <li><strong>主要风格:</strong> 功能/福利导向类 (100%)</li>
-                                <li><strong>特征描述:</strong> 均强调"内测"、"返利"、"累冲"等数值利益点，直击玩家对早期投入回报的关注。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 闲鱼模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品三：闲鱼</h3>
-                    <div class="competitor-content">
-                        <p><strong>闲鱼平台《异环》商品数据分析报告</strong></p>
-                        <p>数据总量: 150 个 | 分析时间: 2026-04-14</p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品品类分布</h4>
-                            <ul class="data-list">
-                                <li><strong>主要品类:</strong> 成品号、昵称、代练</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥1 - ¥128</li>
-                                <li><strong>中位数价格:</strong> ¥8</li>
-                                <li><strong>高价商品(≥¥10,000):</strong> 0 个 (0.0%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-500元:</strong> 150 个 (100.0%)</li>
-                                <li><strong>500-1000元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>1000-5000元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>5000-10000元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>10000元以上:</strong> 0 个 (0.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、交易平台分布</h4>
-                            <ul class="data-list">
-                                <li><strong>其他/未明确:</strong> 150 个 (100.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>四、命名特征分析</h4>
-                            <ul class="data-list">
-                                <li><strong>单字ID:</strong> 0 个 (0.0%)</li>
-                                <li><strong>双字ID:</strong> 0 个 (0.0%)</li>
-                                <li><strong>主要风格:</strong> 霸气/中二类 (1%)、 可爱/萌系 (1%)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2026-04-13 内容 -->
-            <div class="date-content" data-date="2026-04-13" style="display: none;">
-                <!-- 螃蟹模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品一：螃蟹</h3>
-                    <div class="competitor-content">
-                        <p><strong>螃蟹账号《异环》商品数据分析报告</strong></p>
-                        <p>数据总量: 37 个 | 分析时间: 2026-04-14</p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品类型分布</h4>
-                            <ul class="data-list">
-                                <li><strong>成品账号:</strong> 37 个 (100.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥228 - ¥16,500</li>
-                                <li><strong>中位数价格:</strong> ¥1,500</li>
-                                <li><strong>高价商品(≥¥10,000):</strong> 3 个 (8.1%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-500元:</strong> 5 个 (13.5%)</li>
-                                <li><strong>500-1000元:</strong> 7 个 (18.9%)</li>
-                                <li><strong>1000-5000元:</strong> 20 个 (54.1%)</li>
-                                <li><strong>5000-10000元:</strong> 2 个 (5.4%)</li>
-                                <li><strong>10000元以上:</strong> 3 个 (8.1%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、命名特征</h4>
-                            <ul class="data-list">
-                                <li><strong>主要风格:</strong> 游戏相关/功能描述类</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 盼之模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品二：盼之</h3>
-                    <div class="competitor-content">
-                        <p><strong>盼之平台《异环》商品数据分析报告</strong></p>
-                        <p>数据总量: 4 个 | 分析时间: 2026-04-14</p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品类型分布</h4>
-                            <ul class="data-list">
-                                <li><strong>成品号（内测返利号）:</strong> 4 个 (100.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥736 - ¥5,188</li>
-                                <li><strong>中位数价格:</strong> ¥2,950</li>
-                                <li><strong>高价商品(≥¥10,000):</strong> 0 个 (0.0%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-500元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>500-1000元:</strong> 1 个 (25.0%)</li>
-                                <li><strong>1000-5000元:</strong> 3 个 (75.0%)</li>
-                                <li><strong>5000-10000元:</strong> 0 个 (0.0%)</li>
-                                <li><strong>10000元以上:</strong> 0 个 (0.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、命名特征分析</h4>
-                            <ul class="data-list">
-                                <li><strong>主要风格:</strong> 功能/福利导向类 (100%)</li>
-                                <li><strong>特征描述:</strong> 均强调"内测"、"返利"、"累冲"等数值利益点，直击玩家对早期投入回报的关注。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 闲鱼模块 -->
-                <div class="competitor-module">
-                    <h3 class="competitor-title">竞品三：闲鱼</h3>
-                    <div class="competitor-content">
-                        <p><strong>闲鱼平台《异环》商品数据分析报告</strong></p>
-                        <p>数据总量: 100 个 | 分析时间: 2026-04-13</p>
-                        
-                        <div class="data-section">
-                            <h4>一、商品品类分布</h4>
-                            <ul class="data-list">
-                                <li><strong>成品账号:</strong> 45 个 (45.0%)</li>
-                                <li><strong>昵称/ID:</strong> 32 个 (32.0%)</li>
-                                <li><strong>代练服务:</strong> 15 个 (15.0%)</li>
-                                <li><strong>周边商品:</strong> 8 个 (8.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>二、价格分布分析</h4>
-                            <ul class="data-list">
-                                <li><strong>价格范围:</strong> ¥1 - ¥88,888</li>
-                                <li><strong>中位数价格:</strong> ¥1,280</li>
-                                <li><strong>平均价格:</strong> ¥3,456</li>
-                                <li><strong>高价商品(≥¥10,000):</strong> 8 个 (8.0%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">价格区间分布</h4>
-                            <ul class="data-list">
-                                <li><strong>0-500元:</strong> 32 个 (32.0%)</li>
-                                <li><strong>500-1000元:</strong> 18 个 (18.0%)</li>
-                                <li><strong>1000-5000元:</strong> 35 个 (35.0%)</li>
-                                <li><strong>5000-10000元:</strong> 7 个 (7.0%)</li>
-                                <li><strong>10000元以上:</strong> 8 个 (8.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>三、交易平台分布</h4>
-                            <ul class="data-list">
-                                <li><strong>QQ:</strong> 78 个 (78.0%)</li>
-                                <li><strong>微信:</strong> 22 个 (22.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>四、命名特征分析</h4>
-                            <ul class="data-list">
-                                <li><strong>单字ID:</strong> 12 个 (12.0%) — 如"环"、"异"、"夜"、"风"</li>
-                                <li><strong>双字ID:</strong> 24 个 (24.0%) — 如"薄荷"、"娜娜莉"、"早雾"</li>
-                                <li><strong>三字及以上:</strong> 18 个 (18.0%) — 如"九原"、"真红"、"浔光"</li>
-                                <li><strong>特殊符号/英文:</strong> 8 个 (8.0%)</li>
-                                <li><strong>普通昵称:</strong> 38 个 (38.0%)</li>
-                            </ul>
-                            
-                            <h4 style="margin-top: 15px;">主要风格分类</h4>
-                            <ul class="data-list">
-                                <li><strong>诗意/文学类:</strong> 15 个 (15.0%)</li>
-                                <li><strong>霸气/中二类:</strong> 10 个 (10.0%)</li>
-                                <li><strong>可爱/萌系:</strong> 8 个 (8.0%)</li>
-                                <li><strong>角色相关:</strong> 22 个 (22.0%)</li>
-                                <li><strong>其他:</strong> 45 个 (45.0%)</li>
-                            </ul>
-                        </div>
-
-                        <div class="data-section">
-                            <h4>五、热门趋势与风险提示</h4>
-                            <ul class="data-list">
-                                <li><strong>Apple联名周边热度高：</strong>与Apple授权专营店联动的徽章、头像框等周边商品受到关注</li>
-                                <li><strong>稀有ID价值凸显：</strong>单字ID和角色同名ID价格普遍高于普通账号</li>
-                                <li><strong>代练需求稳定：</strong>公测前夕，等级提升和资源收集类代练服务需求增加</li>
-                                <li><strong>账号安全风险：</strong>部分低价账号可能存在找回风险，建议通过验号担保交易</li>
-                                <li><strong>价格波动大：</strong>公测前后账号价格可能出现较大波动，建议谨慎投资</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. 用户需求追踪 -->
-        <div class="section">
-            <h2 class="section-title">3、用户需求追踪</h2>
-            
-            <!-- 日期按钮 -->
-            <div class="date-tabs" id="user-feedback-date-tabs">
-                <button class="date-tab active" data-date="2026-04-21">2026-04-21</button>
-                <button class="date-tab" data-date="2026-04-14">2026-04-14</button>
-                <button class="date-tab" data-date="2026-04-13">2026-04-13</button>
-            </div>
-
-            <!-- 2026-04-21 内容 -->
-            <div class="date-content active" data-date="2026-04-21" style="display: block;">
-                <div class="competitor-module">
-                    <h3 class="competitor-title">用户需求分析 - 微博</h3>
-                    <div class="competitor-content">
-                        <p><strong>#异环# 微博舆情分析</strong></p>
-                        <p>数据总量: 50条 | 分析时间: 2026-04-21</p>
-                        
-                        <div class="weibo-analysis">
-                            <h4>用户关注点分布</h4>
-                            <ul class="data-list">
-                                <li><strong>游戏资讯与官方公告:</strong> 22条 (44.0%) - 公测时间、预下载开启、角色档案介绍、福利活动、联动合作等官方信息发布</li>
-                                <li><strong>游戏攻略与玩法讨论:</strong> 8条 (16.0%) - UID随机发放机制、福利获取途径、角色选择建议、开服福利分析等</li>
-                                <li><strong>社交与组队需求:</strong> 6条 (12.0%) - 微信群/QQ群招募、预抽卡互助、找队友、公会招募等社交行为</li>
-                                <li><strong>同人创作与二创内容:</strong> 5条 (10.0%) - cosplay分享、游戏视频、角色画作、同人小说等</li>
-                                <li><strong>其他/水贴:</strong> 4条 (8.0%) - 简单表态、表情包、无实质内容的帖子</li>
-                                <li><strong>舆情与争议话题:</strong> 3条 (6.0%) - CV争议、性别议题讨论、游戏评价等</li>
-                                <li><strong>代练代肝服务:</strong> 2条 (4.0%) - 个人代肝广告、代练服务推广</li>
-                            </ul>
-
-                            <h4>核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>官方信息主导舆论：</strong>游戏资讯与官方公告占比44%，反映公测前夕玩家高度关注官方动态，包括公测时间（4月23日）、预下载开启（4月21日9:00）、角色档案、福利活动等</li>
-                                <li><strong>社交属性显著：</strong>社交与组队需求占比12%，显示玩家积极寻找社群和队友，预抽卡互助群活跃，反映游戏的多人协作特性和社区驱动特征</li>
-                                <li><strong>攻略需求旺盛：</strong>游戏攻略与玩法讨论占比16%，玩家积极学习UID发放机制、福利获取技巧、角色选择策略等，显示内容消费活跃</li>
-                                <li><strong>代练市场初现：</strong>代练代肝服务占比4%，虽比例不高但已出现个人代肝广告，反映部分玩家对省时省力的需求</li>
-                                <li><strong>二创生态萌芽：</strong>同人创作与二创内容占比10%，包括cosplay、视频、画作等，显示玩家创作热情较高</li>
-                                <li><strong>舆情风险存在：</strong>舆情与争议话题占比6%，涉及CV争议、性别议题等，需持续关注社区舆论走向</li>
-                            </ul>
-
-                            <h4>典型帖子示例</h4>
-                            <div class="example-quote">
-                                <strong>游戏资讯与官方公告：</strong>"异环超话 #异环公测定档0423# #异环公测前瞻# 《异环》公测前瞻特别节目 | 情报回顾《异环》全平台公测将于4月23日正式开启，预下载将于4月21日9:00开启！"
-                            </div>
-                            <div class="example-quote">
-                                <strong>游戏攻略与玩法讨论：</strong>"异环超话#异环# 异环公测前瞻都看了吧！大家注意了没有，最加分的就是UID随机发放。不用熬夜抢注、不用内卷蹲点，这点真的好文明。"
-                            </div>
-                            <div class="example-quote">
-                                <strong>社交与组队需求：</strong>"异环超话 宣群贴wx群wx群，大家都是时间自由，独立自主的臭打游戏的，欢迎各路大佬萌新加入！宣群ing，不论你是男是女是男娘，i人e人汽车人，吃谷，cos，写同人，只要是打算玩异环的都可以来。私我加群啦#异环奇点测试##异环#"
-                            </div>
-                            <div class="example-quote">
-                                <strong>代练代肝服务：</strong>"异环代肝 个人大学生 绿色 代肝多次接单经验 诚信为主 参考价格 价格可聊 直接加v或企鹅随时沟通 也可走平台 可随时上号查看#异环奇点测试##异环##异环代肝##游戏代肝##异环#"
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2026-04-14 内容 -->
-            <div class="date-content" data-date="2026-04-14" style="display: none;">
-                <div class="competitor-module">
-                    <h3 class="competitor-title">用户需求分析</h3>
-                    <div class="competitor-content">
-                        <p><strong>#异环# 微博舆情分析</strong></p>
-                        <p>数据总量: 58条 | 分析时间: 2026-04-14</p>
-                        
-                        <div class="weibo-analysis">
-                            <h4>用户关注点分布</h4>
-                            <ul class="data-list">
-                                <li><strong>游戏资讯与官方动态:</strong> 20条 (34.5%) - 公测定档4月23日、前瞻节目、角色档案、预约奖励等官方信息发布</li>
-                                <li><strong>角色讨论与同人创作:</strong> 13条 (22.4%) - 真红、娜娜莉、薄荷、早雾、浔等角色相关内容及同人图、同人小说创作</li>
-                                <li><strong>线下活动与联动:</strong> 9条 (15.5%) - Apple授权专营店联动活动、萤火虫漫展参展、定制徽章等周边晒图</li>
-                                <li><strong>游戏玩法与技术讨论:</strong> 7条 (12.1%) - 开放世界探索、角色互动系统、载具房产系统、性能优化等技术话题</li>
-                                <li><strong>其他/未分类:</strong> 9条 (15.5%) - 抽奖活动、跨游戏话题、水贴等杂项讨论</li>
-                            </ul>
-
-                            <h4>核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>公测期待度高：</strong>4月23日全平台公测定档消息持续发酵，全球预约量突破3000万，用户关注焦点集中在开服福利和前瞻节目信息</li>
-                                <li><strong>角色IP效应显著：</strong>娜娜莉、薄荷、早雾等角色讨论度占比22.4%，角色档案介绍和同人创作活跃，显示角色设计成功吸引用户情感投入</li>
-                                <li><strong>线下联动效果良好：</strong>Apple授权专营店主题活动（4月8日-20日）引发大量晒图分享，定制徽章等周边受到好评，有效扩大游戏曝光</li>
-                                <li><strong>玩法多样性受关注：</strong>开放世界探索、角色陪伴升级、多元轻玩法等内容讨论占12.1%，玩家对游戏核心玩法表现出浓厚兴趣</li>
-                            </ul>
-
-                            <h4>典型帖子示例</h4>
-                            <div class="example-quote">
-                                <strong>官方资讯：</strong>"《异环》正式公测定档2026年4月23日，同步登陆PC、安卓、iOS、Mac、鸿蒙、PS5六大平台！全球预约已突破3000万，快来预约领取启程专属道具！"
-                            </div>
-                            <div class="example-quote">
-                                <strong>角色讨论：</strong>"娜娜莉也太可爱了吧！Apple联动徽章已经拿到手了，实物比图片还精致！#异环# #娜娜莉#"
-                            </div>
-                            <div class="example-quote">
-                                <strong>线下活动：</strong>"今天去Apple授权专营店参加了异环联动活动，拿到了限定徽章和头像框，店员小姐姐也很热情！推荐大家去看看～"
-                            </div>
-                            <div class="example-quote">
-                                <strong>玩法讨论：</strong>"异环的开放世界交互做得挺细致的，进店互动、多职业赚钱、载具房产系统都有，感觉可玩性很高"
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2026-04-13 内容 -->
-            <div class="date-content" data-date="2026-04-13" style="display: none;">
-                <div class="competitor-module">
-                    <h3 class="competitor-title">用户需求分析</h3>
-                    <div class="competitor-content">
-                        <p><strong>#异环# 微博舆情分析</strong></p>
-                        <p>数据总量: 93条 | 分析时间: 2026-04-13</p>
-                        
-                        <div class="weibo-analysis">
-                            <h4>用户关注点分布</h4>
-                            <ul class="data-list">
-                                <li><strong>官方资讯:</strong> 38条 (40.9%) - 公测定档4月23日、前瞻节目预告、角色档案介绍等</li>
-                                <li><strong>角色讨论:</strong> 13条 (14.0%) - 真红、娜娜莉、薄荷、早雾、浔等角色相关内容及同人创作</li>
-                                <li><strong>线下活动:</strong> 11条 (11.8%) - Apple授权专营店联动活动（4月8日-20日）、萤火虫漫展参展等</li>
-                                <li><strong>玩家反馈:</strong> 10条 (10.8%) - 线下试玩体验、画面评价、BUG反馈等</li>
-                                <li><strong>媒体报道:</strong> 7条 (7.5%) - 完美世界股价影响、行业分析、媒体评测等</li>
-                                <li><strong>其他:</strong> 11条 (11.8%) - 抽奖活动、跨游戏话题讨论等</li>
-                                <li><strong>测试相关:</strong> 3条 (3.2%) - 奇点测试、收容测试、共存测试回顾</li>
-                            </ul>
-
-                            <h4>核心发现</h4>
-                            <ul class="data-list">
-                                <li><strong>公测热度高涨：</strong>4月23日全平台公测定档消息引发广泛关注，预约量突破3000万，全球社媒关注数达500万</li>
-                                <li><strong>线下联动成功：</strong>Apple授权专营店主题活动（4月8日-20日）吸引大量用户到店参与，定制徽章等周边受到好评</li>
-                                <li><strong>角色人气集中：</strong>娜娜莉、薄荷、早雾、浔、九原等角色讨论度较高，特别是与Apple联动的周边活动引发晒图热潮</li>
-                                <li><strong>舆论环境良好：</strong>83.9%中性评价+14.0%正面评价，负面评价仅占2.1%，整体舆情积极健康</li>
-                                <li><strong>前瞻节目期待：</strong>4月18日19:30播出的公测前瞻特别节目成为新焦点，用户期待更多开服福利信息</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
+        <div class="footer">
+            <p>数据文件: /Users/jiewen/.real/users/user-777da3823a68e71779b041c8e7807df0/workspace/闲鱼异环数据_20260422_112452.json</p>
+            <p>报告生成时间: 2026-04-22 11:26:41</p>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化：确保只有active的内容显示，其他都隐藏
-            document.querySelectorAll('.date-content').forEach(content => {
-                if (content.classList.contains('active')) {
-                    content.style.display = 'block';
-                } else {
-                    content.style.display = 'none';
-                }
-            });
-            
-            const tabs = document.querySelectorAll('.date-tab');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const section = tab.closest('.section');
-                    if (!section) return;
-
-                    const moduleTabs = section.querySelectorAll('.date-tab');
-                    const moduleContents = section.querySelectorAll('.date-content');
-                    
-                    moduleTabs.forEach(t => t.classList.remove('active'));
-                    moduleContents.forEach(c => {
-                        c.classList.remove('active');
-                        c.style.display = 'none';
-                    });
-                    
-                    tab.classList.add('active');
-                    
-                    const date = tab.getAttribute('data-date');
-                    const targetContent = section.querySelector(`.date-content[data-date="${date}"]`);
-                    if (targetContent) {
-                        targetContent.classList.add('active');
-                        targetContent.style.display = 'block';
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>
