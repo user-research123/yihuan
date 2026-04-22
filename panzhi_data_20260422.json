@@ -1,0 +1,32 @@
+{
+  "platform": "盼之代售",
+  "game": "异环",
+  "crawl_date": "2026-04-22",
+  "total_items": 3,
+  "items": [
+    {
+      "title": "异环内测返利号，超高充值",
+      "price": 6348,
+      "views": 2763,
+      "wants": 401,
+      "publish_time": "2026-02-17 23:30:47",
+      "tags": ["找回包赔", "测试资格", "共存测试"]
+    },
+    {
+      "title": "三测自玩返利号",
+      "price": 4999,
+      "views": 1782,
+      "wants": 207,
+      "publish_time": null,
+      "tags": ["找回包赔", "测试资格", "三测"]
+    },
+    {
+      "title": "出出出，内测1.5倍返利号",
+      "price": 5874,
+      "views": 2117,
+      "wants": 245,
+      "publish_time": null,
+      "tags": ["找回包赔", "测试资格", "共存测试"]
+    }
+  ]
+}

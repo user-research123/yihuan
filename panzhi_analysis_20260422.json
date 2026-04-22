@@ -1,0 +1,34 @@
+{
+  "report_title": "盼之平台《异环》商品数据分析报告",
+  "analysis_date": "2026-04-22",
+  "total_items": 3,
+  "note": "受平台限制，实际爬取样本量为3个",
+  "product_types": ["测试资格"],
+  "price_analysis": {
+    "price_range": "¥4,999 - ¥6,348",
+    "median_price": 5874,
+    "average_price": 5740,
+    "high_price_items": {
+      "count": 0,
+      "percentage": 0.0
+    }
+  },
+  "price_distribution": {
+    "range_0_5000": {"count": 1, "percentage": 33.3},
+    "range_5000_10000": {"count": 2, "percentage": 66.7},
+    "range_above_10000": {"count": 0, "percentage": 0.0}
+  },
+  "popularity_analysis": {
+    "average_wants": 284,
+    "average_views": 2221
+  },
+  "key_findings": [
+    "所有商品均为'测试资格'类型，属于游戏内测阶段的账号交易",
+    "价格集中在5000-10000元区间（占比66.7%），平均价格约5740元",
+    "用户关注度较高，平均每个商品有284人想要、2221次浏览"
+  ],
+  "data_quality": {
+    "source": "盼之平台真实页面截图识别",
+    "technical_limitations": "页面显示'已全部加载'，实际仅获取3个商品样本，可能受平台反爬机制或搜索条件限制"
+  }
+}
